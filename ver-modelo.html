@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Modelo Escala Ajustada</title>
+    <title>Test - Centrar Modelo 3D</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <style>
       body { margin: 0; overflow: hidden; background-color: #000; }
@@ -20,23 +20,18 @@
     <div id="loading">Cargando modelo...</div>
 
     <a-scene background="color: #ccc" embedded>
-      <!-- Luz ambiental fuerte -->
+      <!-- Luz ambiental -->
       <a-entity light="type: ambient; intensity: 2.5"></a-entity>
-      <!-- Luz direccional frontal -->
-      <a-entity light="type: directional; intensity: 2.5" position="1 3 2"></a-entity>
-      <!-- Luz trasera suave -->
-      <a-entity light="type: directional; intensity: 1" position="-2 1 -3"></a-entity>
+      <a-entity light="type: directional; intensity: 3" position="3 4 5"></a-entity>
 
       <!-- Modelo -->
       <a-entity
         id="modelo"
-        gltf-model="url(https://jnrodriguez9.github.io/modelo-ar/navidad.glb)"
-        position="0 -1.5 -4"
-        rotation="0 180 0">
+        gltf-model="url(https://jnrodriguez9.github.io/modelo-ar/navidad.glb)">
       </a-entity>
 
       <!-- Cámara -->
-      <a-entity camera look-controls position="0 1.6 0"></a-entity>
+      <a-entity camera position="0 0 3" look-controls></a-entity>
     </a-scene>
 
     <script>
@@ -49,8 +44,25 @@
 
         const mesh = modelEntity.getObject3D('mesh');
         if (mesh) {
-          mesh.scale.set(0.1, 0.1, 0.1); // 🟢 Escala moderada (10x más grande que antes)
-          mesh.position.set(0, -1, 0);
+          // Calcula el tamaño y centro reales del modelo
+          const box = new THREE.Box3().setFromObject(mesh);
+          const size = new THREE.Vector3();
+          const center = new THREE.Vector3();
+          box.getSize(size);
+          box.getCenter(center);
+
+          console.log('📦 Tamaño del modelo:', size);
+          console.log('🎯 Centro del modelo:', center);
+
+          // Centrarlo
+          mesh.position.sub(center);
+
+          // Escala automática para que quepa en la cámara
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scaleFactor = 2 / maxDim; // ajusta tamaño visible
+          mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+          console.log('🔍 Escala aplicada:', scaleFactor);
         }
       });
     </script>
