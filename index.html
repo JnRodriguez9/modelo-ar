@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Pesebre AR</title>
 
-    <!-- Versiones estables -->
+    <!-- Versiones estables (compatibles con AR.js NFT) -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
 
@@ -28,9 +28,9 @@
         smoothTolerance="0.01"
         smoothThreshold="5">
 
-        <!-- Tu modelo -->
+        <!-- Modelo 3D con ruta del decodificador Draco -->
         <a-entity
-          gltf-model="./navidad.glb"
+          gltf-model="url(./navidad.glb); dracoDecoderPath: ./;"
           scale="2 2 2"
           position="0 0 0"
           rotation="0 180 0">
@@ -38,6 +38,7 @@
 
       </a-nft>
 
+      <!-- Cámara -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
