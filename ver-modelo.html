@@ -20,8 +20,8 @@
     <div id="loading">Cargando modelo...</div>
 
     <a-scene background="color: #ccc" embedded>
-      <!-- Luz ambiental -->
-      <a-entity light="type: ambient; intensity: 2.5"></a-entity>
+      <!-- Luz ambiental y direccional -->
+      <a-entity light="type: ambient; intensity: 2"></a-entity>
       <a-entity light="type: directional; intensity: 3" position="3 4 5"></a-entity>
 
       <!-- Modelo -->
@@ -42,9 +42,15 @@
         loading.style.display = 'none';
         console.log('✅ Modelo cargado correctamente');
 
-        const mesh = modelEntity.getObject3D('mesh');
-        if (mesh) {
-          // Calcula el tamaño y centro reales del modelo
+        // Esperar un frame para asegurar que el mesh exista
+        setTimeout(() => {
+          const mesh = modelEntity.getObject3D('mesh');
+          if (!mesh) {
+            console.error('⚠️ No se encontró el mesh dentro del modelo');
+            return;
+          }
+
+          // Calcular tamaño y centro
           const box = new THREE.Box3().setFromObject(mesh);
           const size = new THREE.Vector3();
           const center = new THREE.Vector3();
@@ -54,16 +60,16 @@
           console.log('📦 Tamaño del modelo:', size);
           console.log('🎯 Centro del modelo:', center);
 
-          // Centrarlo
+          // Centrar el modelo
           mesh.position.sub(center);
 
-          // Escala automática para que quepa en la cámara
+          // Escalarlo automáticamente
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scaleFactor = 2 / maxDim; // ajusta tamaño visible
+          const scaleFactor = 2 / maxDim;
           mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
           console.log('🔍 Escala aplicada:', scaleFactor);
-        }
+        }, 500);
       });
     </script>
   </body>
