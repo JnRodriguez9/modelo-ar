@@ -19,15 +19,7 @@
       renderer="logarithmicDepthBuffer: true;"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
 
-      <!-- Marcador NFT -->
-      <a-nft
-        type="nft"
-        url="https://jnrodriguez9.github.io/modelo-ar/marcador/Pesebre"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5">
-
+      
         <!-- Modelo 3D con ruta del decodificador Draco -->
         <a-entity
           gltf-model="url(./navidad.glb); dracoDecoderPath: ./;"
@@ -36,12 +28,13 @@
           rotation="0 180 0">
         </a-entity>
 
-      </a-nft>
+      
 
       <!-- Cámara -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
 </html>
+
 
 
