@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Prueba Modelo 3D - Escala Forzada</title>
+    <title>Prueba Modelo 3D - Luz Mejorada</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <style>
       body { margin: 0; overflow: hidden; background-color: #000; }
@@ -21,20 +21,25 @@
     <div id="loading">Cargando modelo...</div>
 
     <a-scene
-      background="color: #111"
+      background="color: #e0e0e0"
       renderer="colorManagement: true; physicallyCorrectLights: true;"
       embedded
       vr-mode-ui="enabled: false">
 
-      <!-- Luces -->
-      <a-entity light="type: ambient; intensity: 1"></a-entity>
-      <a-entity light="type: directional; intensity: 1" position="3 5 2"></a-entity>
+      <!-- 💡 Luz ambiental muy fuerte -->
+      <a-entity light="type: ambient; intensity: 2"></a-entity>
+
+      <!-- 💡 Luz direccional intensa desde arriba -->
+      <a-entity light="type: directional; intensity: 3; castShadow: true" position="2 4 3"></a-entity>
+
+      <!-- 💡 Luz adicional desde el frente -->
+      <a-entity light="type: point; intensity: 2; distance: 20" position="0 2 4"></a-entity>
 
       <!-- Modelo -->
       <a-entity
         id="modelo"
         gltf-model="url(https://jnrodriguez9.github.io/modelo-ar/navidad.glb)"
-        position="0 -1 -5"
+        position="0 -1.5 -4"
         rotation="0 180 0">
       </a-entity>
 
@@ -46,14 +51,15 @@
       const modelEntity = document.querySelector('#modelo');
       const loading = document.querySelector('#loading');
 
-      modelEntity.addEventListener('model-loaded', (event) => {
+      modelEntity.addEventListener('model-loaded', () => {
         loading.style.display = 'none';
         console.log('✅ Modelo cargado correctamente');
 
         const mesh = modelEntity.getObject3D('mesh');
         if (mesh) {
-          mesh.scale.set(0.01, 0.01, 0.01); // 🔽 Forzamos escala real
-          mesh.position.set(0, -1.5, 0);   // 🔽 Ajustamos posición
+          // Escala más pequeña
+          mesh.scale.set(0.01, 0.01, 0.01);
+          mesh.position.set(0, -1.2, 0);
         }
       });
     </script>
