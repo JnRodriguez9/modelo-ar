@@ -2,9 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Prueba Modelo AR</title>
+    <title>Prueba Modelo AR - Casco</title>
 
-    <!-- A-Frame y AR.js NFT -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
 
@@ -19,7 +18,6 @@
       renderer="logarithmicDepthBuffer: true;"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
 
-      <!-- Marcador NFT -->
       <a-nft
         type="nft"
         url="https://jnrodriguez9.github.io/modelo-ar/marcador/Pesebre"
@@ -28,17 +26,15 @@
         smoothTolerance="0.01"
         smoothThreshold="5">
 
-        <!-- Modelo de prueba: Astronauta de Google -->
         <a-entity
-          gltf-model="url(https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF/Astronaut.gltf)"
-          scale="0.2 0.2 0.2"
+          gltf-model="url(https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf)"
+          scale="1 1 1"
           position="0 0 0"
           rotation="0 180 0">
         </a-entity>
 
       </a-nft>
 
-      <!-- Cámara -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
