@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Prueba Modelo 3D - Ajustado</title>
+    <title>Prueba Modelo 3D - Escala Ajustada</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <style>
       body { margin: 0; overflow: hidden; background-color: #000; }
@@ -27,23 +27,19 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false">
 
-      <!-- Luz ambiental y direccional -->
       <a-entity light="type: ambient; intensity: 1"></a-entity>
       <a-entity light="type: directional; intensity: 1" position="3 5 2"></a-entity>
 
-      <!-- Modelo -->
+      <!-- 🔽 Escala y posición MUY reducida -->
       <a-entity
         id="modelo"
         gltf-model="url(https://jnrodriguez9.github.io/modelo-ar/navidad.glb)"
-        scale="0.3 0.3 0.3"
-        position="0 -1.2 -3"
+        scale="0.03 0.03 0.03"
+        position="0 -1.5 -6"
         rotation="0 180 0">
       </a-entity>
 
-      <!-- Cámara con controles -->
-      <a-entity camera look-controls position="0 1.6 0">
-        <a-entity cursor="fuse: false; rayOrigin: mouse"></a-entity>
-      </a-entity>
+      <a-entity camera look-controls position="0 1.6 0"></a-entity>
     </a-scene>
 
     <script>
@@ -53,11 +49,6 @@
       model.addEventListener('model-loaded', () => {
         loading.style.display = 'none';
         console.log('✅ Modelo cargado correctamente');
-      });
-
-      model.addEventListener('model-error', (e) => {
-        loading.textContent = '⚠️ Error al cargar el modelo.';
-        console.error('❌ Error al cargar el modelo:', e.detail);
       });
     </script>
   </body>
