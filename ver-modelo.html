@@ -2,17 +2,32 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Modelo AR directo</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+    <title>Prueba AR Modelo</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   </head>
-  <body style="margin:0;">
-    <model-viewer
-      src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-      ar
-      ar-modes="webxr scene-viewer quick-look"
-      camera-controls
-      auto-rotate
-      style="width: 100vw; height: 100vh;">
-    </model-viewer>
+  <body style="margin:0; overflow:hidden;">
+    <a-scene
+      vr-mode-ui="enabled: false"
+      xrweb
+      embedded
+      renderer="logarithmicDepthBuffer: true"
+      webxr="optionalFeatures: hit-test;">
+
+      <!-- Luz -->
+      <a-entity light="type: directional; color: #fff; intensity: 1" position="0 5 5"></a-entity>
+      <a-entity light="type: ambient; intensity: 0.5"></a-entity>
+
+      <!-- Modelo 3D -->
+      <a-entity
+        id="modelo"
+        gltf-model="url(navidad.glb)"
+        scale="0.5 0.5 0.5"
+        position="0 0 -1">
+      </a-entity>
+
+      <!-- Cámara AR -->
+      <a-entity camera position="0 1.6 0" look-controls></a-entity>
+    </a-scene>
   </body>
 </html>
