@@ -4,19 +4,19 @@
     <meta charset="utf-8">
     <title>Pesebre AR</title>
 
-    <!-- Librerías necesarias -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar-nft.js"></script>
+    <!-- Versiones estables -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
 
     <style>
       body { margin: 0; overflow: hidden; }
     </style>
   </head>
-
   <body>
     <a-scene
       vr-mode-ui="enabled: false"
       embedded
+      renderer="logarithmicDepthBuffer: true;"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
 
       <!-- Marcador NFT -->
@@ -28,17 +28,16 @@
         smoothTolerance="0.01"
         smoothThreshold="5">
 
-        <!-- Tu modelo 3D -->
+        <!-- Tu modelo -->
         <a-entity
           gltf-model="./navidad.glb"
-          scale="0.5 0.5 0.5"
+          scale="2 2 2"
           position="0 0 0"
-          rotation="0 0 0">
+          rotation="0 180 0">
         </a-entity>
 
       </a-nft>
 
-      <!-- Cámara -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
