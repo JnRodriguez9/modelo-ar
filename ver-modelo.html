@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Prueba Modelo 3D - Escala Ajustada</title>
+    <title>Prueba Modelo 3D - Escala Forzada</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <style>
       body { margin: 0; overflow: hidden; background-color: #000; }
@@ -24,31 +24,37 @@
       background="color: #111"
       renderer="colorManagement: true; physicallyCorrectLights: true;"
       embedded
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false">
+      vr-mode-ui="enabled: false">
 
+      <!-- Luces -->
       <a-entity light="type: ambient; intensity: 1"></a-entity>
       <a-entity light="type: directional; intensity: 1" position="3 5 2"></a-entity>
 
-      <!-- 🔽 Escala y posición MUY reducida -->
+      <!-- Modelo -->
       <a-entity
         id="modelo"
         gltf-model="url(https://jnrodriguez9.github.io/modelo-ar/navidad.glb)"
-        scale="0.03 0.03 0.03"
-        position="0 -1.5 -6"
+        position="0 -1 -5"
         rotation="0 180 0">
       </a-entity>
 
+      <!-- Cámara -->
       <a-entity camera look-controls position="0 1.6 0"></a-entity>
     </a-scene>
 
     <script>
-      const model = document.querySelector('#modelo');
+      const modelEntity = document.querySelector('#modelo');
       const loading = document.querySelector('#loading');
 
-      model.addEventListener('model-loaded', () => {
+      modelEntity.addEventListener('model-loaded', (event) => {
         loading.style.display = 'none';
         console.log('✅ Modelo cargado correctamente');
+
+        const mesh = modelEntity.getObject3D('mesh');
+        if (mesh) {
+          mesh.scale.set(0.01, 0.01, 0.01); // 🔽 Forzamos escala real
+          mesh.position.set(0, -1.5, 0);   // 🔽 Ajustamos posición
+        }
       });
     </script>
   </body>
