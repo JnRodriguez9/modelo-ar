@@ -1,45 +1,54 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>AR Astronauta</title>
+<!-- Botón grande -->
+<button id="start-ar">Toca para ver en AR</button>
 
-    <!-- Versiones estables -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
+<!-- Modelo 3D -->
+<model-viewer
+  id="modelo"
+  src="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  camera-controls
+  auto-rotate
+  style="width:100vw; height:100vh;">
+</model-viewer>
 
-    <style>
-      body { margin: 0; overflow: hidden; }
-    </style>
-  </head>
-  <body>
-    <a-scene
-      vr-mode-ui="enabled: false"
-      embedded
-      renderer="logarithmicDepthBuffer: true;"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+}
 
-      <!-- Marcador NFT -->
-      <a-nft
-        type="nft"
-        url="https://jnrodriguez9.github.io/modelo-ar/marcador/Pesebre"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5">
+#start-ar {
+  position: absolute;
+  z-index: 10;
+  padding: 20px 40px;
+  font-size: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-        <!-- Modelo 3D Astronauta -->
-        <a-entity
-          gltf-model="url(https://modelviewer.dev/shared-assets/models/Astronaut.glb)"
-          scale="0.5 0.5 0.5"
-          position="0 0 0"
-          rotation="0 180 0">
-        </a-entity>
+model-viewer {
+  width: 100vw;
+  height: 100vh;
+}
 
-      </a-nft>
+const viewer = document.querySelector('#modelo');
+const btn = document.querySelector('#start-ar');
 
-      <!-- Cámara -->
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
-</html>
+btn.addEventListener('click', async () => {
+  try {
+    await viewer.activateAR(); // Abre la cámara AR
+    btn.style.display = 'none'; // Oculta el botón después
+  } catch (e) {
+    alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
+    console.error(e);
+  }
+});
