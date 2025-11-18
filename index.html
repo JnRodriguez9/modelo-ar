@@ -68,7 +68,8 @@
     const targetEntity = document.getElementById('targetEntity');
     const status = document.getElementById('status');
 
-    sceneEl.addEventListener("renderstart", () => {
+    // Esperar a que MindAR esté inicializado
+    sceneEl.addEventListener("mindar-inited", () => {
       const mindarSystem = sceneEl.systems["mindar-image-system"];
 
       mindarSystem.onTargetFound = () => {
