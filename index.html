@@ -19,16 +19,29 @@
       flex-direction: column;
       background-color: #7142FF; /* Fondo morado */
       font-family: 'Arial', sans-serif;
+      color: white;
     }
 
-    #start-ar {
+    #texto-info {
       position: absolute;
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
+      text-align: center;
+      font-size: 1rem;
+      font-weight: normal;
+      max-width: 90%;
+      color: #fff;
+    }
+
+    #start-ar {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 10;
-      padding: 20px 50px;
-      font-size: 1.5rem;
+      padding: 15px 40px;
+      font-size: 1.2rem; /* Más pequeño para caber en una línea */
       font-weight: bold;
       background-color: white;
       color: #7142FF;
@@ -52,8 +65,11 @@
 </head>
 <body>
 
+  <!-- Texto informativo -->
+  <div id="texto-info">Activa la cámara de tu teléfono para ver en realidad aumentada</div>
+
   <!-- Botón AR -->
-  <button id="start-ar">Experiencia AR</button>
+  <button id="start-ar">Activar cámara</button>
 
   <!-- Modelo 3D -->
   <model-viewer
@@ -72,6 +88,7 @@
       try {
         await viewer.activateAR(); // Abre la cámara AR
         btn.style.display = 'none'; // Oculta el botón
+        document.getElementById('texto-info').style.display = 'none'; // Oculta el texto también
       } catch (e) {
         alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
         console.error(e);
