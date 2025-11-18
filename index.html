@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo AR Limpio</title>
+  <title>Modelo AR</title>
   <!-- Librería model-viewer -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
   <style>
@@ -13,7 +13,35 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #7142FF; /* Fondo morado */
+      font-family: 'Arial', sans-serif;
+    }
+
+    #start-ar {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      padding: 20px 50px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background-color: white;
+      color: #7142FF;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #start-ar:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
 
     model-viewer {
@@ -24,17 +52,32 @@
 </head>
 <body>
 
-  <!-- Modelo 3D en AR -->
+  <!-- Botón AR -->
+  <button id="start-ar">Experiencia AR</button>
+
+  <!-- Modelo 3D -->
   <model-viewer
+    id="modelo"
     src="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
     ar
     ar-modes="webxr scene-viewer quick-look"
     camera-controls
-    scale="0.2 0.2 0.2"
-    camera-target="0m 0.1m 0m"
-    min-camera-orbit="auto auto 1m"
-    max-camera-orbit="auto auto 3m">
-  </model-viewer>
+  ></model-viewer>
+
+  <script>
+    const viewer = document.querySelector('#modelo');
+    const btn = document.querySelector('#start-ar');
+
+    btn.addEventListener('click', async () => {
+      try {
+        await viewer.activateAR(); // Abre la cámara AR
+        btn.style.display = 'none'; // Oculta el botón
+      } catch (e) {
+        alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
+        console.error(e);
+      }
+    });
+  </script>
 
 </body>
 </html>
