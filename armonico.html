@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Experiencia AR - Marcador Pesebre</title>
 
-  <!-- A-Frame y AR.js (con soporte para image tracking NFT) -->
+  <!-- A-Frame y AR.js (con image tracking NFT) -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.7/aframe/build/aframe-ar-nft.js"></script>
 
@@ -21,7 +21,7 @@
       color: white;
     }
 
-    /* Contenedor del texto y botón */
+    /* Interfaz superior */
     #ui-container {
       position: absolute;
       top: 20px;
@@ -73,22 +73,26 @@
       font-weight: bold;
       text-shadow: 0 0 10px rgba(0,0,0,0.4);
       transition: opacity 0.5s ease;
+      display: none;
     }
 
-    /* Ocultar escena al inicio */
-    #escena-ar {
-      display: none;
+    /* Escena AR (oculta al inicio) */
+    a-scene {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Interfaz superior -->
+  <!-- Interfaz inicial -->
   <div id="ui-container">
     <div id="texto-info">
-      Activa la cámara de tu teléfono y apunta al marcador para ver el modelo en realidad aumentada
+      Activa la cámara y apunta al marcador <b>Pesebre</b> para ver el modelo en realidad aumentada
     </div>
     <button id="start-ar">Activar cámara</button>
   </div>
@@ -96,14 +100,13 @@
   <!-- Texto de carga -->
   <div id="loading">Cargando 0%</div>
 
-  <!-- Escena de A-Frame con AR.js -->
+  <!-- Escena AR -->
   <a-scene
     id="escena-ar"
-    vr-mode-ui="enabled: false"
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
-    <!-- Controlador del marcador -->
+    <!-- Controlador de marcador -->
     <a-nft
       type="nft"
       url="marcador/Pesebre"
@@ -114,14 +117,14 @@
     >
       <!-- Modelo GLB -->
       <a-entity
+        id="modelo"
         gltf-model="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
         scale="1 1 1"
         position="0 0 0"
-        rotation="0 0 0"
+        rotation="0 180 0"
       ></a-entity>
     </a-nft>
 
-    <!-- Cámara -->
     <a-entity camera></a-entity>
   </a-scene>
 
@@ -129,40 +132,38 @@
     const btn = document.getElementById('start-ar');
     const ui = document.getElementById('ui-container');
     const loadingText = document.getElementById('loading');
-    const escena = document.getElementById('escena-ar');
+    const scene = document.getElementById('escena-ar');
+    const model = document.getElementById('modelo');
 
-    let modelEntity = null;
+    // Simula progreso visual de carga
+    let progress = 0;
+    function fakeLoading() {
+      loadingText.style.display = 'block';
+      const interval = setInterval(() => {
+        if (progress < 95) {
+          progress += 5;
+          loadingText.textContent = `Cargando ${progress}%`;
+        } else {
+          clearInterval(interval);
+        }
+      }, 200);
+    }
 
-    // Espera a que el modelo esté disponible
-    document.addEventListener('DOMContentLoaded', () => {
-      modelEntity = document.querySelector('a-entity[gltf-model]');
-      if (modelEntity) {
-        modelEntity.addEventListener('model-loaded', () => {
-          loadingText.textContent = 'Cargando 100%';
-          setTimeout(() => {
-            loadingText.style.opacity = '0';
-            setTimeout(() => (loadingText.style.display = 'none'), 600);
-          }, 300);
-        });
-      }
+    // Mostrar el modelo al cargarse realmente
+    model.addEventListener('model-loaded', () => {
+      progress = 100;
+      loadingText.textContent = 'Cargando 100%';
+      setTimeout(() => {
+        loadingText.style.opacity = '0';
+        setTimeout(() => loadingText.style.display = 'none', 600);
+      }, 400);
     });
 
-    // Simular carga progresiva (efecto visual)
-    let progress = 0;
-    const fakeLoading = setInterval(() => {
-      if (progress < 95) {
-        progress += 5;
-        loadingText.textContent = `Cargando ${progress}%`;
-      } else {
-        clearInterval(fakeLoading);
-      }
-    }, 200);
-
-    // Botón para iniciar cámara AR
+    // Activar la cámara y mostrar escena
     btn.addEventListener('click', () => {
       ui.style.display = 'none';
-      loadingText.style.display = 'block';
-      escena.style.display = 'block';
+      scene.style.display = 'block';
+      fakeLoading(); // mostrar carga mientras se inicializa
     });
   </script>
 
