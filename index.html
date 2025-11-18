@@ -44,7 +44,8 @@
     }
 
     #start-ar {
-      padding: 15px 45px;
+      white-space: nowrap; /* evita salto de línea */
+      padding: 15px 50px;
       font-size: 1.2rem;
       font-weight: bold;
       background-color: white;
@@ -72,11 +73,14 @@
       z-index: 5;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(0,0,0,0.4);
+      transition: opacity 0.5s ease;
     }
 
     model-viewer {
       width: 100vw;
       height: 100vh;
+      opacity: 0;
+      transition: opacity 0.8s ease; /* para mostrar el modelo suavemente */
     }
   </style>
 </head>
@@ -101,30 +105,44 @@
     ar-modes="webxr scene-viewer quick-look"
     camera-controls
     exposure="1"
+    reveal="manual"
   ></model-viewer>
 
   <script>
     const viewer = document.querySelector('#modelo');
     const btn = document.querySelector('#start-ar');
-    const texto = document.querySelector('#texto-info');
     const uiContainer = document.querySelector('#ui-container');
     const loadingText = document.querySelector('#loading');
 
-    // Evento de carga del modelo 3D
+    let isLoaded = false;
+
+    // Escucha el progreso real del modelo mientras carga
     viewer.addEventListener('progress', (event) => {
       const progress = Math.round((event.detail.totalProgress || 0) * 100);
       loadingText.textContent = `Cargando ${progress}%`;
-      if (progress >= 100) {
-        setTimeout(() => {
-          loadingText.style.display = 'none';
-        }, 300);
-      }
+    });
+
+    // Cuando el modelo está completamente listo para mostrarse
+    viewer.addEventListener('load', () => {
+      isLoaded = true;
+      // Mostrar el modelo suavemente
+      viewer.style.opacity = '1';
+      // Ocultar el texto de carga con una pequeña demora
+      setTimeout(() => {
+        loadingText.style.opacity = '0';
+        setTimeout(() => (loadingText.style.display = 'none'), 600);
+      }, 300);
+    });
+
+    // Mostrar el modelo cuando haya terminado de cargar
+    viewer.addEventListener('poster-dismissed', () => {
+      if (!isLoaded) viewer.showPoster = false;
     });
 
     // Activar modo AR
     btn.addEventListener('click', async () => {
       try {
-        await viewer.activateAR(); // Abre la cámara AR
+        await viewer.activateAR();
         uiContainer.style.display = 'none'; // Oculta texto y botón
       } catch (e) {
         alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
