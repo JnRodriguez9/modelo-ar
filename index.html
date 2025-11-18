@@ -68,7 +68,7 @@
       bottom: 50%;
       left: 50%;
       transform: translate(-50%, 50%);
-      font-size: 2rem;
+      font-size: 1.3rem;
       color: white;
       z-index: 5;
       font-weight: bold;
@@ -80,7 +80,7 @@
       width: 100vw;
       height: 100vh;
       opacity: 0;
-      transition: opacity 0.8s ease; /* para mostrar el modelo suavemente */
+      transition: opacity 0.8s ease; /* transición suave */
     }
   </style>
 </head>
@@ -105,7 +105,6 @@
     ar-modes="webxr scene-viewer quick-look"
     camera-controls
     exposure="1"
-    reveal="manual"
   ></model-viewer>
 
   <script>
@@ -114,35 +113,27 @@
     const uiContainer = document.querySelector('#ui-container');
     const loadingText = document.querySelector('#loading');
 
-    let isLoaded = false;
-
-    // Escucha el progreso real del modelo mientras carga
+    // Mostrar progreso real
     viewer.addEventListener('progress', (event) => {
       const progress = Math.round((event.detail.totalProgress || 0) * 100);
       loadingText.textContent = `Cargando ${progress}%`;
     });
 
-    // Cuando el modelo está completamente listo para mostrarse
+    // Cuando el modelo termina de cargarse completamente
     viewer.addEventListener('load', () => {
-      isLoaded = true;
       // Mostrar el modelo suavemente
       viewer.style.opacity = '1';
-      // Ocultar el texto de carga con una pequeña demora
+      // Ocultar el texto de carga cuando el modelo esté visible
       setTimeout(() => {
         loadingText.style.opacity = '0';
         setTimeout(() => (loadingText.style.display = 'none'), 600);
-      }, 300);
-    });
-
-    // Mostrar el modelo cuando haya terminado de cargar
-    viewer.addEventListener('poster-dismissed', () => {
-      if (!isLoaded) viewer.showPoster = false;
+      }, 1000);
     });
 
     // Activar modo AR
     btn.addEventListener('click', async () => {
       try {
-        await viewer.activateAR();
+        await viewer.activateAR(); // Abre la cámara AR
         uiContainer.style.display = 'none'; // Oculta texto y botón
       } catch (e) {
         alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
