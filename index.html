@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Postal AR - MindAR Debug Completo</title>
+  <title>Postal AR - Debug Completo Cámara</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -24,8 +24,6 @@
       border-radius: 6px;
       z-index: 100;
     }
-
-    /* Forzar que el video de la cámara ocupe toda la pantalla */
     video {
       width: 100% !important;
       height: 100% !important;
@@ -34,7 +32,7 @@
   </style>
 </head>
 <body>
-  <div id="status">Buscando marcador...</div>
+  <div id="status">Inicializando...</div>
 
   <a-scene
     mindar-image="imageTargetSrc: url(postal.mind); autoStart: true;"
@@ -47,7 +45,7 @@
     <!-- Cámara MindAR -->
     <a-entity mindar-image-camera></a-entity>
 
-    <!-- Contenedor sobre la imagen -->
+    <!-- Contenedor sobre la postal -->
     <a-entity id="targetEntity" visible="false">
 
       <!-- Cubo rojo de debug -->
@@ -79,15 +77,31 @@
     const model = document.getElementById('myModel');
     const status = document.getElementById('status');
 
+    // Verificar si la cámara puede activarse
+    async function checkCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("Cámara activada ✅");
+        status.textContent = "Cámara activada ✅ | Buscando marcador...";
+        // Detener stream de prueba
+        stream.getTracks().forEach(track => track.stop());
+      } catch (err) {
+        console.error("No se pudo activar la cámara ❌", err);
+        status.textContent = "ERROR: No se pudo activar la cámara ❌ Revisa permisos o navegador";
+      }
+    }
+
+    checkCamera();
+
     // Detectar carga del modelo GLB
     model.addEventListener("model-start-loading", () => {
       console.log("Iniciando carga del modelo GLB…");
-      status.textContent = "Buscando marcador... | Cargando modelo…";
+      status.textContent += " | Cargando modelo…";
     });
 
     model.addEventListener("model-loaded", () => {
       console.log("Modelo GLB cargado ✅");
-      status.textContent = "Marcador detectado ✅ | Modelo cargado ✅";
+      status.textContent += " | Modelo cargado ✅";
       model.setAttribute('visible', 'true');
     });
 
@@ -96,13 +110,14 @@
       status.textContent += " | Error cargando modelo ❌";
     });
 
-    // Esperar a que MindAR esté inicializado
+    // MindAR listo
     sceneEl.addEventListener("mindar-inited", () => {
       console.log("MindAR inicializado ✅");
 
       const mindarSystem = sceneEl.systems["mindar-image-system"];
       if (!mindarSystem) {
         console.error("No se encontró el sistema mindar-image-system");
+        status.textContent = "ERROR: Sistema MindAR no encontrado ❌";
         return;
       }
 
@@ -110,11 +125,7 @@
         console.log("Marcador detectado ✅");
         status.textContent = "Marcador detectado ✅";
         targetEntity.setAttribute('visible', 'true');
-
-        // Si el modelo ya está cargado, asegurarse de que sea visible
-        if (model.getAttribute('gltf-model')) {
-          model.setAttribute('visible', 'true');
-        }
+        if (model.getAttribute('gltf-model')) model.setAttribute('visible', 'true');
       };
 
       mindarSystem.onTargetLost = () => {
@@ -125,14 +136,8 @@
       };
     });
 
-    // Mensajes de debugging extra
-    sceneEl.addEventListener("loaded", () => {
-      console.log("Escena cargada ✅");
-    });
-
-    sceneEl.addEventListener("renderstart", () => {
-      console.log("Render inicializado ✅");
-    });
+    sceneEl.addEventListener("loaded", () => console.log("Escena cargada ✅"));
+    sceneEl.addEventListener("renderstart", () => console.log("Render inicializado ✅"));
   </script>
 </body>
 </html>
