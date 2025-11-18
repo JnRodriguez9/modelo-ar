@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Pesebre AR - Debug</title>
+    <title>Pesebre AR - Debug Completo</title>
 
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
@@ -30,8 +30,9 @@
       vr-mode-ui="enabled: false"
       embedded
       renderer="logarithmicDepthBuffer: true;"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;">
 
+      <!-- Marcador NFT -->
       <a-nft
         id="myMarker"
         type="nft"
@@ -41,12 +42,24 @@
         smoothTolerance="0.01"
         smoothThreshold="5">
 
+        <!-- CUBO ROJO DE DEBUG -->
+        <a-box
+          position="0 0.05 0"
+          rotation="0 45 0"
+          scale="0.1 0.1 0.1"
+          color="red"
+          visible="false"
+          id="debugCube">
+        </a-box>
+
+        <!-- Modelo GLB -->
         <a-entity
           id="myModel"
           gltf-model="url(https://modelviewer.dev/shared-assets/models/Astronaut.glb)"
           scale="0.2 0.2 0.2"
           position="0 0.05 0"
-          rotation="0 180 0">
+          rotation="0 180 0"
+          visible="false">
         </a-entity>
 
       </a-nft>
@@ -57,27 +70,28 @@
     <script>
       const marker = document.querySelector("#myMarker");
       const model = document.querySelector("#myModel");
+      const cube = document.querySelector("#debugCube");
       const status = document.getElementById("status");
 
-      // Detectar el marcador
+      // Detectar marcador
       marker.addEventListener("markerFound", () => {
         console.log("Marcador detectado ✅");
         status.textContent = "Marcador detectado ✅";
-        // Forzar que el modelo sea visible
         model.setAttribute('visible', 'true');
+        cube.setAttribute('visible', 'true');
       });
 
       marker.addEventListener("markerLost", () => {
         console.log("Marcador perdido ❌");
         status.textContent = "Buscando marcador...";
         model.setAttribute('visible', 'false');
+        cube.setAttribute('visible', 'false');
       });
 
       // Detectar carga del modelo
       model.addEventListener("model-loaded", () => {
         console.log("Modelo cargado correctamente ✅");
         status.textContent += " | Modelo cargado ✅";
-        model.setAttribute('visible', 'true');
       });
 
       model.addEventListener("model-error", (e) => {
