@@ -1,54 +1,70 @@
-<!-- Botón grande -->
-<button id="start-ar">Toca para ver en AR</button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelo AR</title>
+  <!-- Librería model-viewer -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+    }
 
-<!-- Modelo 3D -->
-<model-viewer
-  id="modelo"
-  src="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
-  ar
-  ar-modes="webxr scene-viewer quick-look"
-  camera-controls
-  auto-rotate
-  style="width:100vw; height:100vh;">
-</model-viewer>
+    #start-ar {
+      position: absolute;
+      z-index: 10;
+      padding: 20px 40px;
+      font-size: 1.5rem;
+      background-color: rgba(255, 255, 255, 0.95);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #000;
-}
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
 
-#start-ar {
-  position: absolute;
-  z-index: 10;
-  padding: 20px 40px;
-  font-size: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
+  <!-- Botón grande -->
+  <button id="start-ar">Toca para ver en AR</button>
 
-model-viewer {
-  width: 100vw;
-  height: 100vh;
-}
+  <!-- Modelo 3D -->
+  <model-viewer
+    id="modelo"
+    src="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    auto-rotate>
+  </model-viewer>
 
-const viewer = document.querySelector('#modelo');
-const btn = document.querySelector('#start-ar');
+  <script>
+    const viewer = document.querySelector('#modelo');
+    const btn = document.querySelector('#start-ar');
 
-btn.addEventListener('click', async () => {
-  try {
-    await viewer.activateAR(); // Abre la cámara AR
-    btn.style.display = 'none'; // Oculta el botón después
-  } catch (e) {
-    alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
-    console.error(e);
-  }
-});
+    btn.addEventListener('click', async () => {
+      try {
+        await viewer.activateAR(); // Abre la cámara AR
+        btn.style.display = 'none'; // Oculta el botón
+      } catch (e) {
+        alert('No se pudo abrir AR. Tu dispositivo o navegador puede no soportarlo.');
+        console.error(e);
+      }
+    });
+  </script>
+
+</body>
+</html>
