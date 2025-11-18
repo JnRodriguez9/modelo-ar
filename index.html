@@ -10,9 +10,23 @@
 
     <style>
       body { margin: 0; overflow: hidden; }
+      #status {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.5);
+        color: white;
+        padding: 5px 10px;
+        font-family: sans-serif;
+        border-radius: 5px;
+        z-index: 100;
+      }
     </style>
   </head>
   <body>
+    <div id="status">Buscando marcador...</div>
+
     <a-scene
       vr-mode-ui="enabled: false"
       embedded
@@ -26,14 +40,15 @@
         smooth="true"
         smoothCount="10"
         smoothTolerance="0.01"
-        smoothThreshold="5">
+        smoothThreshold="5"
+        id="myMarker">
 
-        <!-- Modelo 3D desde GitHub ajustado -->
+        <!-- Modelo 3D desde GitHub -->
         <a-entity
           gltf-model="url(https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb)"
-          scale="0.8 0.8 0.8"       <!-- Ajusta tamaño -->
-          position="0 0 0"           <!-- Centrado en el marcador -->
-          rotation="0 0 0">          <!-- Ajusta la orientación si hace falta -->
+          scale="2 2 2"
+          position="0 0 0"
+          rotation="0 180 0">
         </a-entity>
 
       </a-nft>
@@ -41,5 +56,20 @@
       <!-- Cámara -->
       <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+      const marker = document.querySelector("#myMarker");
+      const status = document.getElementById("status");
+
+      marker.addEventListener("markerFound", () => {
+        console.log("Marcador detectado ✅");
+        status.textContent = "Marcador detectado ✅";
+      });
+
+      marker.addEventListener("markerLost", () => {
+        console.log("Marcador perdido ❌");
+        status.textContent = "Buscando marcador...";
+      });
+    </script>
   </body>
 </html>
