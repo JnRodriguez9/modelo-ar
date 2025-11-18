@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Postal AR - MindAR Debug</title>
+  <title>Postal AR - MindAR Debug Completo</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -16,12 +16,20 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.7);
       color: white;
-      padding: 5px 10px;
+      padding: 8px 12px;
       font-family: sans-serif;
-      border-radius: 5px;
+      font-size: 16px;
+      border-radius: 6px;
       z-index: 100;
+    }
+
+    /* Forzar que el video de la cámara ocupe toda la pantalla */
+    video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
     }
   </style>
 </head>
@@ -34,12 +42,12 @@
     embedded
     color-space="sRGB"
     renderer="logarithmicDepthBuffer: true;"
-    background="color: #000000">
+    background="transparent: true;">
 
     <!-- Cámara MindAR -->
     <a-entity mindar-image-camera></a-entity>
 
-    <!-- Contenedor que aparece sobre la imagen -->
+    <!-- Contenedor sobre la imagen -->
     <a-entity id="targetEntity" visible="false">
 
       <!-- Cubo rojo de debug -->
@@ -48,7 +56,8 @@
         position="0 0.05 0"
         rotation="0 45 0"
         scale="0.1 0.1 0.1"
-        color="red">
+        color="red"
+        visible="true">
       </a-box>
 
       <!-- Modelo GLB -->
@@ -57,7 +66,8 @@
         gltf-model="url(https://modelviewer.dev/shared-assets/models/Astronaut.glb)"
         scale="0.2 0.2 0.2"
         position="0 0.05 0"
-        rotation="0 180 0">
+        rotation="0 180 0"
+        visible="false">
       </a-entity>
 
     </a-entity>
@@ -66,23 +76,62 @@
   <script>
     const sceneEl = document.querySelector('a-scene');
     const targetEntity = document.getElementById('targetEntity');
+    const model = document.getElementById('myModel');
     const status = document.getElementById('status');
+
+    // Detectar carga del modelo GLB
+    model.addEventListener("model-start-loading", () => {
+      console.log("Iniciando carga del modelo GLB…");
+      status.textContent = "Buscando marcador... | Cargando modelo…";
+    });
+
+    model.addEventListener("model-loaded", () => {
+      console.log("Modelo GLB cargado ✅");
+      status.textContent = "Marcador detectado ✅ | Modelo cargado ✅";
+      model.setAttribute('visible', 'true');
+    });
+
+    model.addEventListener("model-error", (e) => {
+      console.error("Error cargando modelo GLB ❌", e);
+      status.textContent += " | Error cargando modelo ❌";
+    });
 
     // Esperar a que MindAR esté inicializado
     sceneEl.addEventListener("mindar-inited", () => {
+      console.log("MindAR inicializado ✅");
+
       const mindarSystem = sceneEl.systems["mindar-image-system"];
+      if (!mindarSystem) {
+        console.error("No se encontró el sistema mindar-image-system");
+        return;
+      }
 
       mindarSystem.onTargetFound = () => {
         console.log("Marcador detectado ✅");
         status.textContent = "Marcador detectado ✅";
         targetEntity.setAttribute('visible', 'true');
+
+        // Si el modelo ya está cargado, asegurarse de que sea visible
+        if (model.getAttribute('gltf-model')) {
+          model.setAttribute('visible', 'true');
+        }
       };
 
       mindarSystem.onTargetLost = () => {
         console.log("Marcador perdido ❌");
         status.textContent = "Buscando marcador...";
         targetEntity.setAttribute('visible', 'false');
+        model.setAttribute('visible', 'false');
       };
+    });
+
+    // Mensajes de debugging extra
+    sceneEl.addEventListener("loaded", () => {
+      console.log("Escena cargada ✅");
+    });
+
+    sceneEl.addEventListener("renderstart", () => {
+      console.log("Render inicializado ✅");
     });
   </script>
 </body>
