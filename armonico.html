@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Experiencia AR - Marcador Pesebre</title>
+  <title>AR con marcador Pesebre</title>
 
-  <!-- A-Frame y AR.js (con image tracking NFT) -->
+  <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.7/aframe/build/aframe-ar-nft.js"></script>
 
@@ -17,7 +17,7 @@
       height: 100%;
       overflow: hidden;
       background-color: #7142FF;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       color: white;
     }
 
@@ -52,13 +52,12 @@
       border: none;
       border-radius: 15px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     #start-ar:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
     }
 
     /* Texto de carga */
@@ -68,104 +67,79 @@
       left: 50%;
       transform: translate(-50%, 50%);
       font-size: 1.3rem;
-      color: white;
-      z-index: 5;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(0,0,0,0.4);
-      transition: opacity 0.5s ease;
-      display: none;
+      color: white;
+      z-index: 5;
     }
 
-    /* Escena AR (oculta al inicio) */
+    /* Escena AR visible desde el inicio */
     a-scene {
       position: absolute;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      display: none;
+      z-index: 1; /* detrás del UI */
     }
   </style>
 </head>
 <body>
 
-  <!-- Interfaz inicial -->
+  <!-- Interfaz superior -->
   <div id="ui-container">
     <div id="texto-info">
       Activa la cámara y apunta al marcador <b>Pesebre</b> para ver el modelo en realidad aumentada
     </div>
-    <button id="start-ar">Activar cámara</button>
+    <button id="start-ar">Listo</button>
   </div>
 
   <!-- Texto de carga -->
   <div id="loading">Cargando 0%</div>
 
   <!-- Escena AR -->
-  <a-scene
-    id="escena-ar"
-    embedded
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-  >
-    <!-- Controlador de marcador -->
-    <a-nft
-      type="nft"
-      url="marcador/Pesebre"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance="0.01"
-      smoothThreshold="5"
-    >
-      <!-- Modelo GLB -->
+  <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+    <a-nft type="nft" url="marcador/Pesebre" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
       <a-entity
         id="modelo"
         gltf-model="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
         scale="1 1 1"
-        position="0 0 0"
         rotation="0 180 0"
-      ></a-entity>
+        position="0 0 0">
+      </a-entity>
     </a-nft>
-
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    const btn = document.getElementById('start-ar');
     const ui = document.getElementById('ui-container');
     const loadingText = document.getElementById('loading');
-    const scene = document.getElementById('escena-ar');
     const model = document.getElementById('modelo');
 
-    // Simula progreso visual de carga
+    // Simular carga progresiva
     let progress = 0;
-    function fakeLoading() {
-      loadingText.style.display = 'block';
-      const interval = setInterval(() => {
-        if (progress < 95) {
-          progress += 5;
-          loadingText.textContent = `Cargando ${progress}%`;
-        } else {
-          clearInterval(interval);
-        }
-      }, 200);
-    }
+    const interval = setInterval(() => {
+      if(progress < 95){
+        progress += 5;
+        loadingText.textContent = `Cargando ${progress}%`;
+      } else {
+        clearInterval(interval);
+      }
+    }, 200);
 
-    // Mostrar el modelo al cargarse realmente
+    // Cuando el modelo realmente se carga
     model.addEventListener('model-loaded', () => {
       progress = 100;
-      loadingText.textContent = 'Cargando 100%';
+      loadingText.textContent = `Cargando ${progress}%`;
       setTimeout(() => {
-        loadingText.style.opacity = '0';
-        setTimeout(() => loadingText.style.display = 'none', 600);
-      }, 400);
+        loadingText.style.display = 'none';
+      }, 500);
     });
 
-    // Activar la cámara y mostrar escena
-    btn.addEventListener('click', () => {
+    // Botón solo oculta la UI
+    document.getElementById('start-ar').addEventListener('click', () => {
       ui.style.display = 'none';
-      scene.style.display = 'block';
-      fakeLoading(); // mostrar carga mientras se inicializa
     });
   </script>
-
 </body>
 </html>
