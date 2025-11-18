@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <title>Pesebre AR - Debug</title>
 
-    <!-- Librerías A-Frame y AR.js NFT -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
 
@@ -33,7 +32,6 @@
       renderer="logarithmicDepthBuffer: true;"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
 
-      <!-- Marcador NFT -->
       <a-nft
         id="myMarker"
         type="nft"
@@ -43,18 +41,16 @@
         smoothTolerance="0.01"
         smoothThreshold="5">
 
-        <!-- Modelo de prueba: astronauta -->
         <a-entity
           id="myModel"
           gltf-model="url(https://modelviewer.dev/shared-assets/models/Astronaut.glb)"
-          scale="0.5 0.5 0.5"
-          position="0 0.1 0"
+          scale="0.2 0.2 0.2"
+          position="0 0.05 0"
           rotation="0 180 0">
         </a-entity>
 
       </a-nft>
 
-      <!-- Cámara -->
       <a-entity camera></a-entity>
     </a-scene>
 
@@ -67,26 +63,28 @@
       marker.addEventListener("markerFound", () => {
         console.log("Marcador detectado ✅");
         status.textContent = "Marcador detectado ✅";
+        // Forzar que el modelo sea visible
+        model.setAttribute('visible', 'true');
       });
 
       marker.addEventListener("markerLost", () => {
         console.log("Marcador perdido ❌");
         status.textContent = "Buscando marcador...";
+        model.setAttribute('visible', 'false');
       });
 
       // Detectar carga del modelo
       model.addEventListener("model-loaded", () => {
         console.log("Modelo cargado correctamente ✅");
         status.textContent += " | Modelo cargado ✅";
+        model.setAttribute('visible', 'true');
       });
 
-      // Detectar errores de carga
       model.addEventListener("model-error", (e) => {
         console.error("Error cargando modelo ❌", e);
         status.textContent += " | Error cargando modelo ❌";
       });
 
-      // Información de inicio de carga
       model.addEventListener("model-start-loading", () => {
         console.log("Iniciando carga del modelo…");
         status.textContent += " | Cargando modelo…";
