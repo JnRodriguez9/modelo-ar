@@ -1,34 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba AR Pesebre</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.7/aframe/build/aframe-ar-nft.js"></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
-  <body style="margin: 0; overflow: hidden;">
-    <a-scene
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;"
-    >
-      <a-nft
-        type="nft"
-        url="marcador/Pesebre"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-      >
-        <a-entity
-          gltf-model="navidad.glb"
-          position="0 0 0"
-          rotation="0 180 0"
-          scale="1 1 1"
-        ></a-entity>
-      </a-nft>
-
-      <a-entity camera></a-entity>
+  <body>
+    <a-scene>
+      mindar-image="imageTargetSrc:"
     </a-scene>
   </body>
 </html>
