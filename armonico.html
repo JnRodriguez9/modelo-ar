@@ -1,23 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR con instrucción</title>
+
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #instruccion {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+        font-size: 1.2rem;
+        text-align: center;
+        z-index: 10;
+      }
+    </style>
   </head>
   <body>
+    <!-- Mensaje de instrucción -->
+    <div id="instruccion">
+      📸 Enfoca la imagen marcador para ver el modelo 3D
+    </div>
+
     <a-scene
-      mindar-image="imageTargetSrc:https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/marcador.mind;"
+      mindar-image="imageTargetSrc: https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/marcador.mind;"
       vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false">
-       <a-camera position= "0 0 0" look-controls="enabled: false"></a-camera>
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model 
-        rotation="90 0 0" position="0 0 0.1" scale="0.5 0.5 0.5"
-          src="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb">
-          
-        </a-gltf-model>
-        </a-entity>
-      
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0" id="target">
+        <a-gltf-model
+          rotation="90 0 0"
+          position="0 0 0.1"
+          scale="0.5 0.5 0.5"
+          src="https://raw.githubusercontent.com/JnRodriguez9/modelo-ar/main/navidad.glb"
+        ></a-gltf-model>
+      </a-entity>
     </a-scene>
+
+    <script>
+      // Cuando el marcador se detecta, ocultamos la instrucción
+      const target = document.querySelector("#target");
+      const instruccion = document.querySelector("#instruccion");
+
+      target.addEventListener("targetFound", () => {
+        instruccion.style.display = "none";
+      });
+
+      // Si el marcador se pierde, vuelve a mostrar la instrucción
+      target.addEventListener("targetLost", () => {
+        instruccion.style.display = "flex";
+      });
+    </script>
   </body>
 </html>
